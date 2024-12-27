@@ -1,0 +1,33 @@
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///events.db"
+db = SQLAlchemy(app)
+
+class Event(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    description = db.Column(db.Text, nullable=False)
+
+@app.route("/")
+def index():
+    now = datetime.now()
+    calendar_data = get_calendar(now.year, now.month)
+    events = Event.query.all()
+    return render_template("index.html", year=now.year, month=now.month, calendar=calendar_data, events=events)
+
+@app.route("/add_event", methods=["POST"])
+def add_event():
+    title = request.form["title"]
+    date = datetime.strptime(request.form["date"], "%Y-%m-%d")
+    description = request.form["description"]
+    event = Event(title=title, date=date, description=description)
+    db.session.add(event)
+    db.session.commit()
+    return redirect(url_for("index"))
+
+if __name__ == "__main__":
+    db.create_all()
+    app.run(debug=True)
+
+
+

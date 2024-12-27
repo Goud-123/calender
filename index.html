@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar App</title>
+</head>
+<body>
+    <h1>Calendar App</h1>
+    <h2>{{ year }}-{{ month }}</h2>
+    <table border="1">
+        <tr>
+            <th>Sun</th>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+        </tr>
+        {% for week in calendar %}
+        <tr>
+            {% for day in week %}
+            <td>{{ day }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <h2>Events</h2>
+    <ul>
+        {% for event in events %}
+        <li>{{ event.title }} - {{ event.date.strftime("%Y-%m-%d") }} - {{ event.description }}</li>
+        {% endfor %}
+    </ul>
+    <form action="/add_event" method="post">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title"><br><br>
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date"><br><br>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description"></textarea><br><br>
+        <input type="submit" value="Add Event">
+    </form>
+</body>
+</html>
+
+
